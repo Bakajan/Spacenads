@@ -1,0 +1,39 @@
+<html>
+<head>
+<style>
+body {
+	background: black;
+}
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+canvas {
+    position:absolute;
+}
+</style>
+</head>
+
+<body>
+<img id="background" src="assets/images/spaceBackground.png" style="display: none;" />
+<img class="actorIdle" src="assets/images/ship00.png" style="display: none;" />
+<img class="actorIdle" src="assets/images/ship01.png" style="display: none;" />
+<img class="actorLeft" src="assets/images/shipLeft00.png" style="display: none;" />
+<img class="actorLeft" src="assets/images/shipLeft01.png" style="display: none;" />
+<img class="actorRight" src="assets/images/shipRight00.png" style="display: none;" />
+<img class="actorRight" src="assets/images/shipRight01.png" style="display: none;" />
+
+<img class="shot" src="assets/images/shot.png" style="display: none;" />
+
+<canvas id='canvas'></canvas>
+<script src="js/bullet.js"></script>
+<script src="js/gun.js"></script>
+<script src="js/actor.js"></script>
+<script src="js/stage.js"></script>
+<script src="js/title.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
