@@ -1,4 +1,4 @@
-function gun() {
+function gun(direction = 0) {
 	var gun = {
 		heat: 10,
 		heatGenerated: 0,
@@ -19,17 +19,15 @@ function gun() {
 	        }
 
 	        if(this.timer == 10) {
-	        	if(this.heatGenerated > 0) {
+	        	if(this.heatGenerated > 0)
 	        		this.heatGenerated = (this.heatGenerated - this.coolRate < 0) ? 0 : this.heatGenerated - this.coolRate;
-	        	}
 	        	this.timer = 0;
 	        }
 	        else 
 	        	this.timer++;
 
-	        if(this.bulletTimer != this.bulletDelay) {
+	        if(this.bulletTimer != this.bulletDelay)
 	        	this.bulletTimer++;
-	        }
 		},
 
 		fireBullet: function(xStart, yStart) {

@@ -3,6 +3,8 @@ function stage(screenWidth, screenHeight) {
         width: screenWidth,
         height: screenHeight,
         scrollY: 0,
+        enemies: [enemy(0,0,leftRightPattern())],
+
 		render: function(ctx) {
 			ctx.clearRect(0, 0, this.width, this.height);
 
@@ -28,6 +30,10 @@ function stage(screenWidth, screenHeight) {
             //         if(!waveCleared)
             //             enemy[i].render(g, ship);
             //     }
+            this.enemies.forEach(function(enemy) {
+                enemy.logic();
+                enemy.render(ctx);
+            });
                 
                 actor.render(ctx);
             // }

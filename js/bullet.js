@@ -1,4 +1,4 @@
-function bullet(xStart, yStart) {
+function bullet(xStart, yStart, direction = 0) {
 	var bullet = {
 		x: xStart,
 		y: yStart,
@@ -8,7 +8,7 @@ function bullet(xStart, yStart) {
 		speed: 10,
 		done: false,
 		targetHit: false,
-		down: false,
+		down: direction,
 
 		done1: false,
 		done2: false,
@@ -18,7 +18,6 @@ function bullet(xStart, yStart) {
 		frame: 0,
 
 		render: function(ctx) {
-
 	        if(this.down)
 	        {
 	            ctx.translate(canvas.width, 0);
