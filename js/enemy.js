@@ -1,4 +1,4 @@
-function enemy(xStart, yStart, pattern) {
+function enemy(xStart, yStart, pattern, name) {
 	var idle = document.getElementsByClassName('enemyIdle');
 	var left = document.getElementsByClassName('enemyLeft');
 	var right = document.getElementsByClassName('enemyRight');
@@ -9,9 +9,10 @@ function enemy(xStart, yStart, pattern) {
 	    pattern: pattern,
 	    width: 0,
 	    height: 0,
-	    speed: 10,
-	    minHp: 10,
-	    maxHp: 10,
+	    xspeed: 10,
+	    yspeed: 1,
+	    minHp: 2,
+	    maxHp: 2,
 	    minHeat: 0,
 	    maxHeat: 100,
 	    
@@ -36,6 +37,7 @@ function enemy(xStart, yStart, pattern) {
 	    kills: 0,
 		buttonPress: false,
 		frame: 0,
+		name: name,
 
 		gun: gun(),
 
@@ -57,17 +59,41 @@ function enemy(xStart, yStart, pattern) {
 	        }
 	        else if(this.dying && !this.dead)
 	        {
-	            // ctx.fillRect(x + (getWidth() / 2) - 5 - deathAnimationCounter, y + (getHeight() / 2), 5, 2); // Left Line
-	            // ctx.fillRect(x + (getWidth() / 2) + 5 + deathAnimationCounter, y + (getHeight() / 2), 5, 2); // Right Line
-	            // ctx.fillRect(x + (getWidth() / 2), y + (getHeight() / 2) - 5 - deathAnimationCounter, 5, 2); // Top Line
-	            // ctx.fillRect(x + (getWidth() / 2), y + (getHeight() / 2) + 5 + deathAnimationCounter, 5, 2); // Bottom Line
+	            ctx.fillRect(this.x + (this.getWidth() / 2) - 5 - this.deathAnimationCounter, this.y + (this.getHeight() / 2), 5, 2); // Left Line
+	            ctx.fillRect(this.x + (this.getWidth() / 2) + 5 + this.deathAnimationCounter, this.y + (this.getHeight() / 2), 5, 2); // Right Line
+	            ctx.fillRect(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2) - 5 - this.deathAnimationCounter, 5, 2); // Top Line
+	            ctx.fillRect(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2) + 5 + this.deathAnimationCounter, 5, 2); // Bottom Line
 	        }
 
 	        if(this.gun) this.gun.render(ctx);
     	},
     
 	    logic: function() {
+	    	if(this.dying) {
+		    	if(this.deathAnimationCounter != 16)
+	            {
+	                this.deathAnimationCounter++;
+	                if(this.deathAnimationCounter == 1)
+	                    actor.score = actor.score + 100;
+	            }
+	            else if(this.deathAnimationCounter == 16)
+	                this.dead = true;
+        	}
+
 	    	this.pattern.logic(this);
+	    },
+
+	    hit: function(damage) {
+	    	this.minHp-=damage;
+	    	if(this.minHp < 1 )
+	    		this.dying = true;
+	    },
+
+	    getWidth() {
+	    	return this.image[this.frame].width;
+	    },
+	    getHeight() {
+	    	return this.image[this.frame].height;
 	    },
     
 	    rightLeftPattern: function()
@@ -75,7 +101,7 @@ function enemy(xStart, yStart, pattern) {
 	        if(!this.switchDirection) {
 	            this.right = false;
 	            this.left = true;
-	            if(this.x - this.speed > 50)
+	            if(this.x - this.xspeed > 50)
 	                this.x = this.x - this.speed;
 	            else
 	                this.switchDirection = false;

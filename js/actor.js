@@ -80,7 +80,7 @@ function actor(xStart, yStart) {
 	            // ctx.fillRect(x + (getWidth() / 2), y + (getHeight() / 2) + 5 + deathAnimationCounter, 5, 2); // Bottom Line
 	        }
 
-	        if(this.gun) this.gun.render(ctx);
+	        if(this.gun) this.gun.render(ctx, screen.enemies);
         
 	        // for(var i = 0; i != bullets.length; i++)
 	        // {

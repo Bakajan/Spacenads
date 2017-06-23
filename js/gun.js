@@ -9,10 +9,10 @@ function gun(direction = 0) {
 		timer: 10,
 		coolRate: 2,
 
-		render: function() {
+		render: function(ctx, targets) {
 			for(var i = this.bullets.length -1; i >= 0; i--) {
 	        	if(this.bullets[i]) {
-		        	this.bullets[i].logic();
+		        	this.bullets[i].logic(targets);
 		        	this.bullets[i].render(ctx);
 		        	if(this.bullets[i].done) this.bullets.splice(i, 1);
 	        	}
@@ -32,6 +32,7 @@ function gun(direction = 0) {
 
 		fireBullet: function(xStart, yStart) {
 			if((this.heatGenerated + this.heat) < this.heatTolerance && this.bulletTimer == this.bulletDelay) {
+				console.log('sdsdd')
         		this.heatGenerated = (this.heatGenerated + this.heat > this.heatTolerance) ?  this.heatTolerance : this.heatGenerated + this.heat;
         		this.bullets.push(bullet(xStart, yStart));
         		this.bulletTimer = 0;

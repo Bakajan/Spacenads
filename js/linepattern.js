@@ -1,10 +1,10 @@
 function linePattern() {
 	var pattern = {
 		logic: function(ship) {
-			if(ship.y + 2 > 800)
+			if(ship.y + ship.yspeed > 800)
 	            ship.dead = true;
 	        else
-	            ship.y = ship.y + 2;
+	            ship.y = ship.y + ship.yspeed;
 		}
 	}
 

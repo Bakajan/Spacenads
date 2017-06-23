@@ -3,7 +3,7 @@ function stage(screenWidth, screenHeight) {
         width: screenWidth,
         height: screenHeight,
         scrollY: 0,
-        enemies: [enemy(0,0,leftRightPattern())],
+        enemies: [enemy(0,0,linePattern(), 'fred'), enemy(0,0,leftRightPattern(), 'flintstone')],
 
 		render: function(ctx) {
 			ctx.clearRect(0, 0, this.width, this.height);
@@ -30,7 +30,9 @@ function stage(screenWidth, screenHeight) {
             //         if(!waveCleared)
             //             enemy[i].render(g, ship);
             //     }
-            this.enemies.forEach(function(enemy) {
+            if(this.enemies.length == 0) this.enemies = [enemy(0,0,linePattern(), 'fred'), enemy(0,0,leftRightPattern(), 'flintstone')];
+            this.enemies.forEach(function(enemy, index, array) {
+                if(enemy.dead) array.splice(index, 1);
                 enemy.logic();
                 enemy.render(ctx);
             });
