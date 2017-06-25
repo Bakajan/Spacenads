@@ -74,10 +74,10 @@ function actor(xStart, yStart) {
 	        }
 	        else if(dying && !dead)
 	        {
-	            // ctx.fillRect(x + (getWidth() / 2) - 5 - deathAnimationCounter, y + (getHeight() / 2), 5, 2); // Left Line
-	            // ctx.fillRect(x + (getWidth() / 2) + 5 + deathAnimationCounter, y + (getHeight() / 2), 5, 2); // Right Line
-	            // ctx.fillRect(x + (getWidth() / 2), y + (getHeight() / 2) - 5 - deathAnimationCounter, 5, 2); // Top Line
-	            // ctx.fillRect(x + (getWidth() / 2), y + (getHeight() / 2) + 5 + deathAnimationCounter, 5, 2); // Bottom Line
+	            ctx.fillRect(x + (this.getWidth() / 2) - 5 - this.deathAnimationCounter, y + (this.getHeight() / 2), 5, 2); // Left Line
+	            ctx.fillRect(x + (this.getWidth() / 2) + 5 + this.deathAnimationCounter, y + (this.getHeight() / 2), 5, 2); // Right Line
+	            ctx.fillRect(x + (this.getWidth() / 2), this.y + (this.getHeight() / 2) - 5 - this.deathAnimationCounter, 5, 2); // Top Line
+	            ctx.fillRect(x + (this.getWidth() / 2), this.y + (this.getHeight() / 2) + 5 + this.deathAnimationCounter, 5, 2); // Bottom Line
 	        }
 
 	        if(this.gun) this.gun.render(ctx, screen.enemies);
@@ -190,6 +190,32 @@ function actor(xStart, yStart) {
 	        //     else
 	        //         dead = true;
 	        // }
+	    },
+
+	    getWidth: function() {
+	    	return this.image[this.frame].width;
+	    },
+	    getHeight: function() {
+	    	return this.image[this.frame].height;
+	    },
+
+	    hit: function(damage) {
+	    	this.minHp-=damage;
+	    	if(this.minHp < 1 )
+	    		this.dying = true;
+	    },
+
+	    collisionCheck: function(Object) {
+	    	var rect1 = {x: this.x, y: this.y, width: this.getWidth(), height: this.getHeight()};
+	    	var rect2 = {x: Object.x, y: Object.y, width: Object.getWidth(), height: Object.getHeight()};
+
+	    	if (rect1.x < rect2.x + rect2.width &&
+			   rect1.x + rect1.width > rect2.x &&
+			   rect1.y < rect2.y + rect2.height &&
+			   rect1.height + rect1.y > rect2.y) {
+
+			   	return true;
+			}
 	    }
     }
 

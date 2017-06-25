@@ -1,10 +1,15 @@
 function linePattern() {
 	var pattern = {
 		logic: function(ship) {
-			if(ship.y + ship.yspeed > 800)
+			if(ship.y + ship.yspeed > canvas.height)
 	            ship.dead = true;
-	        else
+	        else {
 	            ship.y = ship.y + ship.yspeed;
+	            if(ship.collisionCheck(actor)) {
+	            	actor.hit(ship.minHp);
+	            	ship.hit(ship.minHp);
+	            }
+	        }
 		}
 	}
 

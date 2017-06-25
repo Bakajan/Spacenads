@@ -31,6 +31,9 @@ function enemy(xStart, yStart, pattern, name) {
 		animationTimer:0,
 		bullets: [],
 	    inventory: [],
+	    left: left,
+	    right: right,
+	    idele: idle,
 	    image: idle,
 	    shots: 0,
 	    hits: 0,
@@ -54,6 +57,8 @@ function enemy(xStart, yStart, pattern, name) {
 	            	else
 	            		this.frame = 0;
 	            }
+
+	            if(left)
 
 	            ctx.drawImage(this.image[this.frame], this.x, this.y);
 	        }
@@ -89,11 +94,26 @@ function enemy(xStart, yStart, pattern, name) {
 	    		this.dying = true;
 	    },
 
-	    getWidth() {
+	    getWidth: function() {
 	    	return this.image[this.frame].width;
 	    },
-	    getHeight() {
+	    getHeight: function() {
 	    	return this.image[this.frame].height;
+	    },
+
+	    collisionCheck: function(Object) {
+	    	if(!Object.dead && !Object.dying) {
+		    	var rect1 = {x: this.x, y: this.y, width: this.getWidth(), height: this.getHeight()};
+		    	var rect2 = {x: Object.x, y: Object.y, width: Object.getWidth(), height: Object.getHeight()};
+
+		    	if (rect1.x < rect2.x + rect2.width &&
+				   rect1.x + rect1.width > rect2.x &&
+				   rect1.y < rect2.y + rect2.height &&
+				   rect1.height + rect1.y > rect2.y) {
+
+				   	return true;
+				}
+			}
 	    },
     
 	    rightLeftPattern: function()

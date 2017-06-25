@@ -16,6 +16,8 @@ function bullet(xStart, yStart, direction = 0) {
 		image: document.getElementsByClassName('shot'),
 		animationTimer: 0,
 		frame: 0,
+		dead: false,
+		dying: false,
 
 		render: function(ctx) {
 			if(!this.done) {
@@ -35,16 +37,10 @@ function bullet(xStart, yStart, direction = 0) {
 			if(!this.done) {
 				/// Check if target is hit //
 				for(var i = 0; i != targets.length; i++) {
-					var width = targets[i].image[targets[i].frame].width;
-					var height = targets[i].image[targets[i].frame].height;
-
-					if(this.y >= targets[i].y && this.y <= targets[i].y + width) {
-	        			if(this.x >= targets[i].x && this.x <= targets[i].x + height) {
-	        				targets[i].hit(1);
-	        				console.log('hit');
-	        				this.done = true;
-	        			}
-	        		}
+					if(targets[i].collisionCheck(this)) {
+						targets[i].hit(1);
+	        			this.done = true;
+					}
 				}
 
 				// Move bullet //
@@ -77,7 +73,14 @@ function bullet(xStart, yStart, direction = 0) {
             	else
             		this.frame = 0;
             }
-		}
+		},
+
+		getWidth: function() {
+	    	return this.image[this.frame].width;
+	    },
+	    getHeight: function() {
+	    	return this.image[this.frame].height;
+	    },
 	}
 
 	return bullet;

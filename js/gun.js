@@ -32,7 +32,6 @@ function gun(direction = 0) {
 
 		fireBullet: function(xStart, yStart) {
 			if((this.heatGenerated + this.heat) < this.heatTolerance && this.bulletTimer == this.bulletDelay) {
-				console.log('sdsdd')
         		this.heatGenerated = (this.heatGenerated + this.heat > this.heatTolerance) ?  this.heatTolerance : this.heatGenerated + this.heat;
         		this.bullets.push(bullet(xStart, yStart));
         		this.bulletTimer = 0;
