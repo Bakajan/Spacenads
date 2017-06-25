@@ -1,6 +1,6 @@
-function leftRightPattern() {
+function leftRightPattern(left) {
 	var pattern = {
-		switchDirection: false,
+		switchDirection: (left) ? false : true,
 
 		logic: function(ship) {
     		if(!this.switchDirection) {

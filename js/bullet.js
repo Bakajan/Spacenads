@@ -21,14 +21,7 @@ function bullet(xStart, yStart, direction = 0) {
 
 		render: function(ctx) {
 			if(!this.done) {
-		        if(this.down)
-		        {
-		            ctx.translate(canvas.width, 0);
-					ctx.scale(-1, 1);
-		            ctx.drawImage(this.image[this.frame], this.x, this.y);
-		        }
-		        else
-		            ctx.drawImage(this.image[this.frame], this.x, this.y);
+				ctx.drawImage(this.image[this.frame], this.x, this.y);
 	    	}
 		},
 
@@ -38,8 +31,10 @@ function bullet(xStart, yStart, direction = 0) {
 				/// Check if target is hit //
 				for(var i = 0; i != targets.length; i++) {
 					if(targets[i].collisionCheck(this)) {
-						targets[i].hit(1);
-	        			this.done = true;
+						if(!targets[i].dead && !targets[i].dying) {
+							targets[i].hit(1);
+		        			this.done = true;
+	        			}
 					}
 				}
 

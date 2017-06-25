@@ -13,27 +13,23 @@ function enemy(xStart, yStart, pattern, name) {
 	    yspeed: 1,
 	    minHp: 2,
 	    maxHp: 2,
-	    minHeat: 0,
-	    maxHeat: 100,
 	    
 	    hit: false,
 	    dead: false,
 	    dying: false,
 	    score: 0,
-	    gun: [],
 	    guns:[],
 	    selectedGun: 0,
 	    deaths: 0,
 
 		bulletDelay: 0,
 	    deathAnimationCounter: 0,
-	    heatTimer: 0,
 		animationTimer:0,
 		bullets: [],
 	    inventory: [],
 	    left: left,
 	    right: right,
-	    idele: idle,
+	    idle: idle,
 	    image: idle,
 	    shots: 0,
 	    hits: 0,
@@ -42,7 +38,7 @@ function enemy(xStart, yStart, pattern, name) {
 		frame: 0,
 		name: name,
 
-		gun: gun(),
+		gun: gun(1),
 
 		render: function(ctx, target) {
 	        if(!this.dead && !this.dying) {
@@ -70,7 +66,7 @@ function enemy(xStart, yStart, pattern, name) {
 	            ctx.fillRect(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2) + 5 + this.deathAnimationCounter, 5, 2); // Bottom Line
 	        }
 
-	        if(this.gun) this.gun.render(ctx);
+	        if(this.gun) this.gun.render(ctx, [actor], 1);
     	},
     
 	    logic: function() {
@@ -86,6 +82,8 @@ function enemy(xStart, yStart, pattern, name) {
         	}
 
 	    	this.pattern.logic(this);
+	    	if(this.y > this.getWidth())
+	    	this.gun.fireBullet(this.x + (this.image[this.frame].width / 2), this.y);
 	    },
 
 	    hit: function(damage) {
@@ -114,30 +112,6 @@ function enemy(xStart, yStart, pattern, name) {
 				   	return true;
 				}
 			}
-	    },
-    
-	    rightLeftPattern: function()
-	    {
-	        if(!this.switchDirection) {
-	            this.right = false;
-	            this.left = true;
-	            if(this.x - this.xspeed > 50)
-	                this.x = this.x - this.speed;
-	            else
-	                this.switchDirection = false;
-	        }
-	        else {
-	            this.right = true;
-	            this.left = false;
-	            if(this.x + this.speed < 1230)
-	                this.x = this.x + this.speed;
-	            else
-	                this.switchDirection = true;
-	        }
-	        if(this.y + 2 > 800)
-	            this.dead = true;
-	        else
-	            this.y = this.y + 2;
 	    }
     }
 

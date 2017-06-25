@@ -3,7 +3,10 @@ function stage(screenWidth, screenHeight) {
         width: screenWidth,
         height: screenHeight,
         scrollY: 0,
-        enemies: [enemy(0,0,linePattern(), 'fred'), enemy(0,0,leftRightPattern(), 'flintstone')],
+        enemies: [
+            enemy(roll(0, canvas.width - 100), roll(0, -200),linePattern(), 'fred'), 
+            enemy(roll(0, canvas.width - 100), roll(0, -200),leftRightPattern(false), 'flintstone')
+        ],
 
 		render: function(ctx) {
 			ctx.clearRect(0, 0, this.width, this.height);
@@ -21,16 +24,12 @@ function stage(screenWidth, screenHeight) {
             
             
             // Draw enemies //
-            // for(int i = 0; i != enemy.length; i++)
-            // {
-            //     Sprite target = null;
-            //     if(enemy[i] != null)
-            //     {
-            //         target = enemy[i];
-            //         if(!waveCleared)
-            //             enemy[i].render(g, ship);
-            //     }
-            if(this.enemies.length == 0) this.enemies = [enemy(0,0,linePattern(), 'fred'), enemy(0,0,leftRightPattern(), 'flintstone')];
+            if(this.enemies.length == 0) {
+                this.enemies = [
+                    enemy(roll(0, canvas.width - 100), roll(0, -200),linePattern(), 'fred'), 
+                    enemy(roll(0, canvas.width - 100), roll(0, -200),leftRightPattern(), 'flintstone')
+                ];
+            }
             this.enemies.forEach(function(enemy, index, array) {
                 if(enemy.dead) array.splice(index, 1);
                 enemy.logic();
@@ -41,15 +40,15 @@ function stage(screenWidth, screenHeight) {
             // }
             
             // Game over //
-            // if(ship.dead)
-            // {
-            //     ctx.setColor(Color.WHITE);
-            //     ctx.setFont(new Font("Monospaced", Font.BOLD, gameOverFontSize));
-            //     ctx.drawString("Game Over", 640 - 80, 400 - 25);
-            //     ctx.drawString("Hit Escape", 640 - 85, 400);
-            //     if(gameOverFontSize != 20)
-            //         gameOverFontSize = gameOverFontSize - 5;
-            // }
+            if(actor.dead)
+            {
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold ' + this.gameOverFontSize + 'px monospaced';
+                ctx.fillText("Game Over", 640 - 80, 400 - 25);
+                ctx.fillText("Hit Escape", 640 - 85, 400);
+                if(this.gameOverFontSize != 20)
+                    this.gameOverFontSize = this.gameOverFontSize - 5;
+            }
             
             // Draw Life/stamina bars //
             var result = actor.minHp / actor.maxHp;

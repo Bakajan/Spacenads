@@ -42,9 +42,8 @@ window.addEventListener('keydown', function(e) {
 
 window.addEventListener('keyup', function(e) {
   buttonsPressed.forEach(function(button, index) {
-    if(button == e.keyCode) {
+    if(button == e.keyCode)
       buttonsPressed.splice(index, 1);
-    }
   });
 });
 
@@ -57,18 +56,16 @@ window.onresize = function(event) {
     screen.render(ctx);
   }
 
-  if(actor) {
+  if(actor)
     actor.y = canvas.height - 200;
-  }
 };
 
 function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-  if (typeof stroke == "undefined" ) {
+  if (typeof stroke == "undefined" )
     stroke = true;
-  }
-  if (typeof radius === "undefined") {
+  if (typeof radius === "undefined")
     radius = 5;
-  }
+
   ctx.beginPath();
   ctx.moveTo(x + radius, y);
   ctx.lineTo(x + width - radius, y);
@@ -80,10 +77,15 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
   ctx.lineTo(x, y + radius);
   ctx.quadraticCurveTo(x, y, x + radius, y);
   ctx.closePath();
-  if (stroke) {
+  if (stroke) 
     ctx.stroke();
-  }
-  if (fill) {
+  if (fill) 
     ctx.fill();
-  }        
+}
+
+// Utilities //
+function roll(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

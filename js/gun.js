@@ -8,6 +8,7 @@ function gun(direction = 0) {
 		bullets: [],
 		timer: 10,
 		coolRate: 2,
+		direction: direction,
 
 		render: function(ctx, targets) {
 			for(var i = this.bullets.length -1; i >= 0; i--) {
@@ -33,7 +34,7 @@ function gun(direction = 0) {
 		fireBullet: function(xStart, yStart) {
 			if((this.heatGenerated + this.heat) < this.heatTolerance && this.bulletTimer == this.bulletDelay) {
         		this.heatGenerated = (this.heatGenerated + this.heat > this.heatTolerance) ?  this.heatTolerance : this.heatGenerated + this.heat;
-        		this.bullets.push(bullet(xStart, yStart));
+        		this.bullets.push(bullet(xStart, yStart, this.direction));
         		this.bulletTimer = 0;
         	}
 		}
