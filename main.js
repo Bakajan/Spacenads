@@ -60,6 +60,7 @@ window.onresize = function(event) {
     actor.y = canvas.height - 200;
 };
 
+// Utilities //
 function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
   if (typeof stroke == "undefined" )
     stroke = true;
@@ -83,7 +84,6 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
     ctx.fill();
 }
 
-// Utilities //
 function roll(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);

@@ -70,6 +70,8 @@ function actor(xStart, yStart) {
 	            	this.gun.fireBullet(this.x + (this.image[this.frame].width / 2), this.y);
 	            }
 
+
+
 	            ctx.drawImage(this.image[this.frame], this.x, this.y);
 	        }
 	        else if(this.dying && !this.dead)
@@ -78,6 +80,17 @@ function actor(xStart, yStart) {
 	            ctx.fillRect(this.x + (this.getWidth() / 2) + 5 + this.deathAnimationCounter, this.y + (this.getHeight() / 2), 5, 2); // Right Line
 	            ctx.fillRect(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2) - 5 - this.deathAnimationCounter, 5, 2); // Top Line
 	            ctx.fillRect(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2) + 5 + this.deathAnimationCounter, 5, 2); // Bottom Line
+	        }
+	        else {
+	        	if(buttonsPressed.includes(27)) {
+	            	screen = stage();
+	            	screen.width = canvas.width;
+				    screen.height = canvas.height;
+				    this.minHp = this.maxHp;
+				    this.dead = false;
+				    this.dying = false;
+				    screen.render(ctx);
+				}
 	        }
 
 	        if(this.gun) this.gun.render(ctx, screen.enemies);
