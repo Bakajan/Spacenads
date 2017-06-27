@@ -36,42 +36,14 @@ function actor(xStart, yStart) {
 		buttonPress: false,
 		frame: 0,
 
+		dodgeSpeed: 100,
+		dodgeHeat: 25,
+
 		gun: gun(),
 
 		render: function(ctx, target) {
 	        if(!this.dead && !this.dying) {
-	            if(this.animationTimer != 10) {
-	            	this.animationTimer++;
-	            }
-	            else {
-	            	this.animationTimer = 0;
-	            	if(this.frame != this.image.length-1) {
-	            		this.frame++;
-	            	}
-	            	else
-	            		this.frame = 0;
-	            }
-
-	            if(buttonsPressed.reverse().includes(leftButton)) {
-	            	this.image = left;
-	            	if(this.x - this.speed > 0)
-	                    this.x = this.x - this.speed;
-	            }
-	            else if(buttonsPressed.reverse().includes(rightButton)) {
-	            	this.image = right;
-	            	if(this.x + this.image[this.frame].width + this.speed < canvas.width)
-	                    this.x = this.x + this.speed;
-	            }
-	            if(!buttonsPressed.includes(leftButton) && !buttonsPressed.includes(rightButton)){
-	            	this.image = idle;
-	            }
-
-	            if(buttonsPressed.includes(fireButton)) {
-	            	this.gun.fireBullet(this.x + (this.image[this.frame].width / 2), this.y);
-	            }
-
-
-
+	            
 	            ctx.drawImage(this.image[this.frame], this.x, this.y);
 	        }
 	        else if(this.dying && !this.dead)
@@ -81,6 +53,22 @@ function actor(xStart, yStart) {
 	            ctx.fillRect(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2) - 5 - this.deathAnimationCounter, 5, 2); // Top Line
 	            ctx.fillRect(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2) + 5 + this.deathAnimationCounter, 5, 2); // Bottom Line
 	        }
+
+	        if(this.gun) this.gun.render(ctx, screen.enemies);
+    	},
+    
+	    logic: function() {
+	    	if(!this.dead && !this.dying) {
+	    		this.timers();
+	    		this.move();
+	            this.dodge();
+	        }
+	        else if(this.dying && !this.dead) {
+	            if(this.deathAnimationCounter != 16)
+	                this.deathAnimationCounter++;
+	            else
+	                this.dead = true;
+	        }
 	        else {
 	        	if(buttonsPressed.includes(27)) {
 	            	screen = stage();
@@ -89,20 +77,10 @@ function actor(xStart, yStart) {
 				    this.minHp = this.maxHp;
 				    this.dead = false;
 				    this.dying = false;
+				    this.score = 0;
+				    this.gun = gun();
 				    screen.render(ctx);
 				}
-	        }
-
-	        if(this.gun) this.gun.render(ctx, screen.enemies);
-    	},
-    
-	    logic: function() {
-	        if(this.dying)
-	        {
-	            if(this.deathAnimationCounter != 16)
-	                this.deathAnimationCounter++;
-	            else
-	                this.dead = true;
 	        }
 	    },
 
@@ -117,6 +95,67 @@ function actor(xStart, yStart) {
 	    	this.minHp-=damage;
 	    	if(this.minHp < 1 )
 	    		this.dying = true;
+	    },
+
+	    timers: function() {
+	    	if(this.animationTimer != 10) {
+            	this.animationTimer++;
+            }
+            else {
+            	this.animationTimer = 0;
+            	if(this.frame != this.image.length-1) {
+            		this.frame++;
+            	}
+            	else
+            		this.frame = 0;
+            }
+	    },
+
+	    move: function() {
+	    	if(buttonsPressed.reverse().includes(leftButton)) {
+            	this.image = left;
+            	if(this.x - this.speed > 0)
+                    this.x = this.x - this.speed;
+            }
+            else if(buttonsPressed.reverse().includes(rightButton)) {
+            	this.image = right;
+            	if(this.x + this.image[this.frame].width + this.speed < canvas.width)
+                    this.x = this.x + this.speed;
+            }
+            if(!buttonsPressed.includes(leftButton) && !buttonsPressed.includes(rightButton)){
+            	this.image = idle;
+            }
+
+            if(buttonsPressed.includes(fireButton)) {
+            	this.gun.fireBullet(this.x + (this.image[this.frame].width / 2), this.y);
+            }
+	    },
+
+	    dodge: function() {
+	    	if(buttonsPressed.indexOf(90) != -1 && (buttonsPressed.indexOf(leftButton) != -1 || buttonsPressed.indexOf(rightButton) != -1) ) {
+	         	if(this.gun.heatGenerated + this.dodgeHeat <= this.gun.heatTolerance) {
+	             	if(buttonsPressed.includes(leftButton)) {
+	             		if(this.x - this.dodgeSpeed > 0)
+	             			this.x = this.x - this.dodgeSpeed;
+	             		else 
+	             			this.x = 0;
+	             	}
+	             	else if(buttonsPressed.includes(rightButton)) {
+	             		if(this.x + this.dodgeSpeed + this.getWidth() <= canvas.width)
+	             			this.x = this.x + this.dodgeSpeed;
+	             		else
+	             			this.x = canvas.width - this.getWidth();
+	             	}
+
+	             	this.gun.heatGenerated += this.dodgeHeat;
+	         	}
+	     	 }
+
+	     	// Remove dodge key to avoid activating multiple dodges //
+	     	var index = buttonsPressed.indexOf(90);
+	     	if (index > -1) {
+				buttonsPressed.splice(index, 1);
+			}
 	    },
 
 	    collisionCheck: function(Object) {
