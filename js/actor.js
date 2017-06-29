@@ -38,11 +38,20 @@ function actor(xStart, yStart) {
 
 		dodgeSpeed: 100,
 		dodgeHeat: 25,
+		afterimages: [],
 
 		gun: gun(),
 
 		render: function(ctx, target) {
 	        if(!this.dead && !this.dying) {
+	        	if(this.afterimages.length > 0) {
+	        		var i = this.afterimages.length
+					while (i--) {
+					    this.afterimages[i].render(ctx);
+					    if(this.afterimages[i].alpha <= 0)
+					    	this.afterimages.splice(i, 1);
+					}
+	        	}
 	            
 	            ctx.drawImage(this.image[this.frame], this.x, this.y);
 	        }
@@ -134,17 +143,63 @@ function actor(xStart, yStart) {
 	    dodge: function() {
 	    	if(buttonsPressed.indexOf(90) != -1 && (buttonsPressed.indexOf(leftButton) != -1 || buttonsPressed.indexOf(rightButton) != -1) ) {
 	         	if(this.gun.heatGenerated + this.dodgeHeat <= this.gun.heatTolerance) {
+	         		var to;
+	         		var start = this.x;
+	         		var y =this.y;
+	             	var imageCopy = this.image[this.frame];
 	             	if(buttonsPressed.includes(leftButton)) {
-	             		if(this.x - this.dodgeSpeed > 0)
+	             		if(this.x - this.dodgeSpeed > 0) {
+	             			to = this.x - this.dodgeSpeed;
 	             			this.x = this.x - this.dodgeSpeed;
-	             		else 
+	             		}
+	             		else  {
+	             			to = 0;
 	             			this.x = 0;
+	             		}
+
+	             		for(var i = 0; i != 10; i++) {
+	             			var image = {
+	             				x: start - ((start - to)/(i + 1)),
+	             				y: y,
+	             				image: imageCopy,
+	             				alpha: 1/(i+1),
+	             				render(ctx) {
+	             					ctx.save();
+	             					ctx.globalAlpha = this.alpha;
+	             					ctx.drawImage(this.image, this.x, this.y);
+	             					ctx.restore();
+	             					this.alpha-=.01;
+	             				}
+	             			}
+	             			this.afterimages.push(image);
+	             		}
 	             	}
 	             	else if(buttonsPressed.includes(rightButton)) {
-	             		if(this.x + this.dodgeSpeed + this.getWidth() <= canvas.width)
+	             		if(this.x + this.dodgeSpeed + this.getWidth() <= canvas.width) {
+	             			to = this.x + this.dodgeSpeed;
 	             			this.x = this.x + this.dodgeSpeed;
-	             		else
+	             		}
+	             		else {
+	             			to = canvas.width - this.getWidth();
 	             			this.x = canvas.width - this.getWidth();
+	             		}
+
+	             		for(var i = 0; i != 10; i++) {
+	             			var image = {
+	             				x: start + ((to - start)/(i + 1)),
+	             				y: y,
+	             				image: imageCopy,
+	             				alpha: 1/(i+1),
+	             				render(ctx) {
+	             					ctx.save();
+	             					ctx.globalAlpha = this.alpha;
+	             					ctx.drawImage(this.image, this.x, this.y);
+	             					ctx.restore();
+	             					this.alpha-=.01;
+	             				}
+	             			}
+	             			this.afterimages.push(image);
+	             		}
 	             	}
 
 	             	this.gun.heatGenerated += this.dodgeHeat;
