@@ -102,8 +102,10 @@ function actor(xStart, yStart) {
 
 	    hit: function(damage) {
 	    	this.minHp-=damage;
-	    	if(this.minHp < 1 )
+	    	if(this.minHp < 1 ) {
 	    		this.dying = true;
+	    		this.minHp = 0;
+	    	}
 	    },
 
 	    timers: function() {

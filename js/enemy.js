@@ -58,7 +58,7 @@ function enemy(xStart, yStart, pattern, name) {
 
 	            ctx.drawImage(this.image[this.frame], this.x, this.y);
 	        }
-	        else if(this.dying && !this.dead)
+	        else if(this.dying && !this.dead && this.deathAnimationCounter < 16)
 	        {
 	            ctx.fillRect(this.x + (this.getWidth() / 2) - 5 - this.deathAnimationCounter, this.y + (this.getHeight() / 2), 5, 2); // Left Line
 	            ctx.fillRect(this.x + (this.getWidth() / 2) + 5 + this.deathAnimationCounter, this.y + (this.getHeight() / 2), 5, 2); // Right Line
@@ -77,13 +77,17 @@ function enemy(xStart, yStart, pattern, name) {
 	                if(this.deathAnimationCounter == 1)
 	                    actor.score = actor.score + 100;
 	            }
-	            else if(this.deathAnimationCounter == 16)
-	                this.dead = true;
+	            else if(this.deathAnimationCounter == 16) {
+	            	console.log(this.gun.bullets.length)
+	            	if(this.gun.bullets.length == 0)
+	                	this.dead = true;
+	            }
         	}
-
-	    	this.pattern.logic(this);
-	    	if(this.y > this.getWidth())
-	    	this.gun.fireBullet(this.x + (this.image[this.frame].width / 2), this.y);
+        	else {
+        		this.pattern.logic(this);
+	    		if(this.y > this.getWidth())
+	    			this.gun.fireBullet(this.x + (this.image[this.frame].width / 2), this.y);
+        	}
 	    },
 
 	    hit: function(damage) {
