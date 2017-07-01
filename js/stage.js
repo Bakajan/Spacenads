@@ -114,14 +114,14 @@ function stage(screenWidth, screenHeight) {
             var height = 50;
             
 
-            // if(ship.selectedGun == 0)
-            //     ctx.setColor(Color.BLUE);
+            // if(actor.gun.selectedBullet == 0)
+            //     ctx.fillStyle = 'blue';
             // else
-            //     ctx.setColor(Color.BLACK);
+            //     ctx.fillStyle = 'black';
             
             ctx.fillStyle = 'white';
             ctx.fillRect(x, y, width, height);
-            //ctx.drawImage(ship.guns[0].icon, x, y, null);
+            //ctx.drawImage(actor.gun.ammo.icon, x, y, null);
              // Menu Border //
             ctx.fillStyle = 'rgb((116, 116, 116)';
             ctx.lineWidth = 6;

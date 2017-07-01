@@ -103,7 +103,7 @@ function enemy(xStart, yStart, pattern, name) {
 	    },
 
 	    collisionCheck: function(Object) {
-	    	if(!Object.dead && !Object.dying) {
+	    	if(!Object.dead && !Object.dying && !Object.done) {
 		    	var rect1 = {x: this.x, y: this.y, width: this.getWidth(), height: this.getHeight()};
 		    	var rect2 = {x: Object.x, y: Object.y, width: Object.getWidth(), height: Object.getHeight()};
 

@@ -5,8 +5,10 @@ function gun(direction = 0, bullet) {
 		heatTolerance: 100,
 		bulletTimer: 0,
 		bulletDelay: 20,
-		bullets: [],
+		ammo: [],
+		selectedBullet: 0,
 		bullet: bullet,
+		bullets: [],
 		timer: 10,
 		coolRate: 2,
 		direction: direction,
@@ -33,11 +35,21 @@ function gun(direction = 0, bullet) {
 		},
 
 		fireBullet: function(xStart, yStart) {
-			if((this.heatGenerated + this.heat) < this.heatTolerance && this.bulletTimer == this.bulletDelay) {
-        		this.heatGenerated = (this.heatGenerated + this.heat > this.heatTolerance) ?  this.heatTolerance : this.heatGenerated + this.heat;
+			var bullet = this.bullet(xStart, yStart, this.direction);
+			if(this.heatGenerated + bullet.heat < this.heatTolerance && this.bulletTimer == this.bulletDelay) {
         		this.bullets.push(this.bullet(xStart, yStart, this.direction));
+        		this.heatGenerated = (this.heatGenerated + this.bullets[this.bullets.length-1].heat > this.heatTolerance) ?  
+        			this.heatTolerance : 
+        			this.heatGenerated + this.bullets[this.bullets.length-1].heat;
         		this.bulletTimer = 0;
         	}
+		},
+
+		changeAmmo: function() {
+			if(this.selectedBullet < this.ammo.length-1)
+				this.selectedBullet++;
+			else
+				this.selectedBullet = 0;
 		}
 	}
 

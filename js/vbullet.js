@@ -5,6 +5,7 @@ function vbullet(xStart, yStart, direction = 0) {
 		x2: xStart,
 		y2: yStart,
 
+		heat: 20,
 		speed: 10,
 		done: false,
 		targetHit: false,
@@ -31,21 +32,45 @@ function vbullet(xStart, yStart, direction = 0) {
 			// Only check if hasn't hit target //
 			if(!this.done) {
 				/// Check if target is hit //
+				var width = this.getWidth();
+				var height = this.getHeight();
+				var x = parseInt(this.x);
+				var y = this.y;
+				var bulletRight =  {
+					x: x, 
+					y: y,
+					width: width,
+					height: height,
+					getWidth: function() { return this.width; }, 
+					getHeight: function() { return this.height; }
+				};
 				for(var i = 0; i != targets.length; i++) {
-					var bulletRight =  {x: this.x, y: this.y, width: this.getWidth(), height: this.getHeight()};
-					if(targets[i].collisionCheck(this)) {
+					if(targets[i].collisionCheck(bulletRight)) {
 						if(!targets[i].dead && !targets[i].dying) {
 							targets[i].hit(1);
 		        			this.done1 = true;
+		        			break;
 	        			}
 					}
 				}
+				var width = this.getWidth();
+				var height = this.getHeight();
+				var x2 = this.x2;
+				var y2 = this.y2;
+				var bulletLeft =  {
+					x: x2, 
+					y: y2,
+					width: width,
+					height: height,
+					getWidth: function() { return this.width; }, 
+					getHeight: function() { return this.height; }, 
+				};
 				for(var i = 0; i != targets.length; i++) {
-					var bulletLeft =  {x: this.x2, y: this.y2, width: this.getWidth(), height: this.getHeight()};
-					if(targets[i].collisionCheck(this)) {
+					if(targets[i].collisionCheck(bulletLeft)) {
 						if(!targets[i].dead && !targets[i].dying) {
 							targets[i].hit(1);
 		        			this.done2 = true;
+		        			break;
 	        			}
 					}
 				}

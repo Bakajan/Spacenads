@@ -3,10 +3,11 @@ function bullet(xStart, yStart, direction = 0) {
 		x: xStart,
 		y: yStart,
 		speed: 10,
-
+		heat: 10,
+		
 		done: false,
 		targetHit: false,
-		down: direction,
+		down: direction, 
 		done1: false,
 		done2: false,
 

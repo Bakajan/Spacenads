@@ -6,27 +6,18 @@ function actor(xStart, yStart) {
 	var actor = {
 		x: xStart,
 	    y: yStart,
-	    width: 0,
-	    height: 0,
 	    speed: 10,
 	    minHp: 10,
 	    maxHp: 10,
-	    minHeat: 0,
-	    maxHeat: 100,
 	    
 	    hit: false,
 	    dead: false,
 	    dying: false,
 	    score: 0,
-	    guns:[],
-	    selectedGun: 0,
 	    deaths: 0,
 
-		bulletDelay: 0,
 	    deathAnimationCounter: 0,
-	    heatTimer: 0,
 		animationTimer:0,
-		bullets: [],
 	    inventory: [],
 	    image: idle,
 	    shots: 0,
@@ -86,7 +77,10 @@ function actor(xStart, yStart) {
 				    this.dead = false;
 				    this.dying = false;
 				    this.score = 0;
-				    this.gun = gun();
+				    var x = this.x;
+				    var y = this.y;
+				    var dir = this.direction;
+				    this.gun = gun(0, function(x,y,dir) { return vbullet(x,y,dir) });
 				    screen.render(ctx);
 				}
 	        }
