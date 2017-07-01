@@ -1,4 +1,4 @@
-function gun(direction = 0) {
+function gun(direction = 0, bullet) {
 	var gun = {
 		heat: 10,
 		heatGenerated: 0,
@@ -6,6 +6,7 @@ function gun(direction = 0) {
 		bulletTimer: 0,
 		bulletDelay: 20,
 		bullets: [],
+		bullet: bullet,
 		timer: 10,
 		coolRate: 2,
 		direction: direction,
@@ -34,7 +35,7 @@ function gun(direction = 0) {
 		fireBullet: function(xStart, yStart) {
 			if((this.heatGenerated + this.heat) < this.heatTolerance && this.bulletTimer == this.bulletDelay) {
         		this.heatGenerated = (this.heatGenerated + this.heat > this.heatTolerance) ?  this.heatTolerance : this.heatGenerated + this.heat;
-        		this.bullets.push(bullet(xStart, yStart, this.direction));
+        		this.bullets.push(this.bullet(xStart, yStart, this.direction));
         		this.bulletTimer = 0;
         	}
 		}

@@ -18,7 +18,6 @@ function actor(xStart, yStart) {
 	    dead: false,
 	    dying: false,
 	    score: 0,
-	    gun: [],
 	    guns:[],
 	    selectedGun: 0,
 	    deaths: 0,
@@ -40,7 +39,7 @@ function actor(xStart, yStart) {
 		dodgeHeat: 25,
 		afterimages: [],
 
-		gun: gun(),
+		gun: gun(0, function(x,y,dir) { return vbullet(x,y,dir) }),
 
 		render: function(ctx, target) {
 	        if(!this.dead && !this.dying) {

@@ -2,14 +2,11 @@ function bullet(xStart, yStart, direction = 0) {
 	var bullet = {
 		x: xStart,
 		y: yStart,
-		x2: 0,
-		y2: 0,
-
 		speed: 10,
+
 		done: false,
 		targetHit: false,
 		down: direction,
-
 		done1: false,
 		done2: false,
 

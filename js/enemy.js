@@ -38,7 +38,7 @@ function enemy(xStart, yStart, pattern, name) {
 		frame: 0,
 		name: name,
 
-		gun: gun(1),
+		gun: gun(1, function(x,y,dir) { return bullet(x,y,dir) }),
 
 		render: function(ctx, target) {
 	        if(!this.dead && !this.dying) {
@@ -78,14 +78,13 @@ function enemy(xStart, yStart, pattern, name) {
 	                    actor.score = actor.score + 100;
 	            }
 	            else if(this.deathAnimationCounter == 16) {
-	            	console.log(this.gun.bullets.length)
 	            	if(this.gun.bullets.length == 0)
 	                	this.dead = true;
 	            }
         	}
         	else {
         		this.pattern.logic(this);
-	    		if(this.y > this.getWidth())
+	    		if(this.y > this.getWidth()) 
 	    			this.gun.fireBullet(this.x + (this.image[this.frame].width / 2), this.y);
         	}
 	    },
