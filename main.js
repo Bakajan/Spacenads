@@ -35,9 +35,23 @@ var fireButton = 32;
 var buttonPressed = false;
 var buttonsPressed = [];
 
+var butt = button(32);
+var buttons = [];
+
 window.addEventListener('keydown', function(e) {
   if(!buttonsPressed.includes(e.keyCode))
     buttonsPressed.push(e.keyCode);
+
+  if(buttons.length === 0)buttons.push(button(e.keyCode));
+
+  var check = false;
+  for(var i = 0; i != buttons.length; i++) {
+    if(buttons[i].key == e.keyCode) {
+      check = true;
+    }
+  }
+  if(!check)
+     buttons.push(button(e.keyCode));
 });
 
 window.addEventListener('keyup', function(e) {
@@ -45,6 +59,12 @@ window.addEventListener('keyup', function(e) {
     if(button == e.keyCode)
       buttonsPressed.splice(index, 1);
   });
+
+  for(var i = buttons.length-1; i >= 0; i--) {
+    if(buttons[i].key == e.keyCode) {
+      buttons.splice(i, 1);
+    }
+  }
 });
 
 window.onresize = function(event) {
@@ -88,4 +108,13 @@ function roll(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function findButton(buttons, key) {
+  for(var i = 0; i != buttons.length; i++) {
+    if(buttons[i].key == key)
+      return buttons[i];
+  }
+
+  return false;
 }

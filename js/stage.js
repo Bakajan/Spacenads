@@ -25,31 +25,76 @@ function stage(screenWidth, screenHeight) {
             
             // Draw enemies //
             if(this.enemies.length == 0) {
-                this.enemies = [
-                    enemy(roll(0, canvas.width - 100), roll(0, -200),linePattern(), 'fred'), 
-                    enemy(roll(0, canvas.width - 100), roll(0, -200),leftRightPattern(), 'flintstone')
-                ];
+                var test = 4;
+                for(var i = 0; i != test; i++) {
+                    if(i%2 == 0)
+                        this.enemies.push(enemy(roll(0, canvas.width - 100), roll(0, -200),linePattern(), 'fred'));
+                    else
+                         this.enemies.push(enemy(roll(0, canvas.width - 100), roll(0, -200),leftRightPattern(), 'flintstone'));
+                }
             }
             this.enemies.forEach(function(enemy, index, array) {
                 if(enemy.dead) array.splice(index, 1);
                 enemy.logic();
                 enemy.render(ctx);
             });
-                
-                actor.render(ctx);
-            // }
             
+            actor.render(ctx);
+            ctx.fillStyle = 'white';
+            ctx.fillText("Shots:" + actor.shots, 0, 25);
+            ctx.fillText("hits:" + actor.hits, 0, 50);
+            ctx.fillText("Kills:" + actor.kills, 0, 75);
+
+            this.UIrender(ctx);
+
             // Game over //
             if(actor.dead)
             {
+                ctx.fillStyle = 'blue';
+                ctx.fillRect(415, 180, 400, 400);
+                ctx.fillStyle = 'white';
+                ctx.strokeRect(415, 180, 400, 400);
+                
+                var div1 = actor.minHp;
+                var div2 = actor.maxHp;
+                var results = (div1 / div2) * 100;
+                var lifeScore = (results / 100) * 1000;
+                
+                var acc1 = actor.hits;
+                var acc2 = actor.shots;
+                var accuracy = (isNaN(acc1/acc2)) ? 0 : (acc1 / acc2) * 100;
+                var accResult = (isNaN(accuracy)) ? 0 : (accuracy / 100) * 1000;
+                
+                ctx.fillText("Stage Cleared!", 550, 225);
+                ctx.fillText("Base Score ", 440, 275); ctx.fillText(": " + actor.score, 575, 275);
+                ctx.fillText("Enemy Kills", 440, 300); ctx.fillText(": " + actor.kills + " X 66 = " + actor.kills * 66, 575, 300);
+                ctx.fillText("Accuracy ", 440, 325); ctx.fillText(": " + parseInt(accuracy) + "% / 1000 = " + parseInt(accResult), 575, 325);
+                //ctx.fillText("Life left ", 440, 350); ctx.fillText(": " + parseInt(results) + "% / 1000 = " + parseInt(lifeScore), 575, 350);
+                //ctx.drawString("Times Died ", 440, 375); ctx.drawString(": " + ship.deaths + " / -1000 = " + ship.deaths * -1000, 575, 375);
+                
+                //var finalScore = baseScore + (ship.kills * 66) + (int)(accResult) + (int)lifeScore + (ship.deaths * -1000);
+                var finalScore = actor.score + (actor.kills * 66) + parseInt(accResult);
+                ctx.fillText("Final Score ", 440, 550); ctx.fillText(": " + finalScore, 585, 550);
+
                 ctx.fillStyle = 'white';
                 ctx.font = 'bold ' + this.gameOverFontSize + 'px monospaced';
-                ctx.fillText("Game Over", 640 - 80, 400 - 25);
-                ctx.fillText("Hit Escape", 640 - 85, 400);
+                ctx.fillText("Game Over", 640 - 80, 150 - 25);
+                ctx.fillText("Hit Escape", 640 - 85, 150);
                 if(this.gameOverFontSize != 20)
                     this.gameOverFontSize = this.gameOverFontSize - 5;
             }
-            
+        },
+
+        logic: function() {
+            if(this.scrollY != -this.height)
+                this.scrollY--;
+            else
+                this.scrollY = 0;
+
+            actor.logic();
+        },
+
+        UIrender: function(ctx) {
             // Draw Life/stamina bars //
             var result = actor.minHp / actor.maxHp;
             var barLine = 25 + (500 * result);
@@ -107,80 +152,39 @@ function stage(screenWidth, screenHeight) {
             ctx.fillText("Score", 600, this.height-55);
             ctx.fillText(actor.score, 600, this.height-20);
 
-            // Menu Filling //
+            // Selected ammo //
+            // base coords //
             var x = 550;
             var y = this.height-130;
             var width = 50;
             var height = 50;
-            
 
-            // if(actor.gun.selectedBullet == 0)
-            //     ctx.fillStyle = 'blue';
-            // else
-            //     ctx.fillStyle = 'black';
-            
-            ctx.fillStyle = 'white';
-            ctx.fillRect(x, y, width, height);
-            //ctx.drawImage(actor.gun.ammo.icon, x, y, null);
-             // Menu Border //
-            ctx.fillStyle = 'rgb((116, 116, 116)';
-            ctx.lineWidth = 6;
-            roundRect(ctx, x, y, width, height, 8);
-            ctx.fillStyle = 'white';
-            ctx.lineWidth = 3;
-            roundRect(ctx, x - 2, y - 1, width + 3, height, 8);
-            
-            // if(ship.selectedGun == 1)
-            //     ctx.setColor(Color.BLUE);
-            // else
-            //     ctx.setColor(Color.BLACK);
-            
-            ctx.fillRect(x + 100, y, width, height);
-            //ctx.drawImage(ship.guns[1].icon, x + 100, y, null);
-            ctx.fillStyle = 'rgb((116, 116, 116)'; // Menu Border //
-            ctx.lineWidth = 6;
-            roundRect(ctx, x + 100, y, width, height, 8);
-            ctx.fillStyle = 'white';
-            ctx.lineWidth = 3;
-            roundRect(ctx, x - 2 + 100, y - 1, width + 3, height, 8);
-            
-            // Stage Completed //
-            // if(waveCleared)
-            // {
-            //     ctx.setColor(Color.BLUE);
-            //     ctx.fillRect(415, 180, 400, 400);
-            //     ctx.setColor(Color.WHITE);
-            //     ctx.drawRect(415, 180, 400, 400);
-                
-            //     double div1 = minHp;
-            //     double div2 = maxHp;
-            //     double results = (div1 / div2) * 100;
-            //     double lifeScore = (results / 100) * 1000;
-                
-            //     double acc1 = ship.hits;
-            //     double acc2 = ship.shots;
-            //     double accuracy = (acc1 / acc2) * 100;
-            //     double accResult = (accuracy / 100) * 1000;
-                
-            //     ctx.drawString("Stage Cleared!", 550, 225);
-            //     ctx.drawString("Base Score ", 440, 275); ctx.drawString(": " + baseScore, 575, 275);
-            //     ctx.drawString("Enemy Kills", 440, 300); ctx.drawString(": " + ship.kills + " X 66 = " + ship.kills * 66, 575, 300);
-            //     ctx.drawString("Accuracy ", 440, 325); ctx.drawString(": " + (int)accuracy + "% / 1000 = " + (int)accResult, 575, 325);
-            //     ctx.drawString("Life left ", 440, 350); ctx.drawString(": " + (int)results + "% / 1000 = " + (int)lifeScore, 575, 350);
-            //     ctx.drawString("Times Died ", 440, 375); ctx.drawString(": " + ship.deaths + " / -1000 = " + ship.deaths * -1000, 575, 375);
-                
-            //     int finalScore = baseScore + (ship.kills * 66) + (int)(accResult) + (int)lifeScore + (ship.deaths * -1000);
-            //     ctx.drawString("Final Score ", 440, 550); ctx.drawString(": " + finalScore, 585, 550);
-            // }
-        },
-
-        logic: function() {
-            if(this.scrollY != -this.height)
-                this.scrollY--;
+            if(actor.gun.selectedBullet == 0)
+                 ctx.fillStyle = 'blue';
             else
-                this.scrollY = 0;
+                ctx.fillStyle = 'black';
 
-            actor.logic();
+            // X Space between icons //
+            var iconXOffset = 100;
+            for(var i = 0; i != actor.gun.ammo.length; i++) {
+                // Highlight selected ammo //
+                if(actor.gun.selectedBullet == i)
+                    ctx.fillStyle = 'blue';
+                else 
+                    ctx.fillStyle = 'black';
+                ctx.fillRect(x + (iconXOffset * i), y, width, height);
+
+                // Draw ammo icon //
+                ctx.drawImage(actor.gun.ammo[i].icon, x + (iconXOffset * i), y);
+
+                 // Menu Border //
+                ctx.fillStyle = 'rgb((116, 116, 116)';
+                ctx.lineWidth = 6;
+                roundRect(ctx, x, y, width, height, 8);
+                ctx.fillStyle = 'white';
+                ctx.lineWidth = 3;
+                roundRect(ctx, x - 2 + (iconXOffset * i), y - 1, width + 3, height, 8);
+            }
         }
     }
 

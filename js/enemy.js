@@ -4,6 +4,8 @@ function enemy(xStart, yStart, pattern, name) {
 	var right = document.getElementsByClassName('enemyRight');
 
 	var enemy = {
+		type: 'enemy',
+
 		x: xStart,
 	    y: yStart,
 	    pattern: pattern,
@@ -38,7 +40,7 @@ function enemy(xStart, yStart, pattern, name) {
 		frame: 0,
 		name: name,
 
-		gun: gun(1, function(x,y,dir) { return bullet(x,y,dir) }),
+		gun: gun(1, [{ make: function(x,y,dir) { return bullet(x,y,dir) } }]),
 
 		render: function(ctx, target) {
 	        if(!this.dead && !this.dying) {
@@ -74,8 +76,8 @@ function enemy(xStart, yStart, pattern, name) {
 		    	if(this.deathAnimationCounter != 16)
 	            {
 	                this.deathAnimationCounter++;
-	                if(this.deathAnimationCounter == 1)
-	                    actor.score = actor.score + 100;
+	                // if(this.deathAnimationCounter == 1)
+	                    
 	            }
 	            else if(this.deathAnimationCounter == 16) {
 	            	if(this.gun.bullets.length == 0)
@@ -89,10 +91,16 @@ function enemy(xStart, yStart, pattern, name) {
         	}
 	    },
 
-	    hit: function(damage) {
+	    hit: function(damage, Object) {
 	    	this.minHp-=damage;
-	    	if(this.minHp < 1 )
+	    	// If enemy hit by a bullet, don't count it //
+            if(Object == 'bullet')
+            	actor.hits++;
+	    	if(this.minHp < 1 ) {
 	    		this.dying = true;
+	    		actor.score+= this.getScore();
+	            actor.kills++;
+	    	}
 	    },
 
 	    getWidth: function() {
@@ -100,6 +108,13 @@ function enemy(xStart, yStart, pattern, name) {
 	    },
 	    getHeight: function() {
 	    	return this.image[this.frame].height;
+	    },
+
+	    getScore: function() {
+	    	var base = 10;
+	    	var score = base * this.maxHp;
+
+	    	return score;
 	    },
 
 	    collisionCheck: function(Object) {

@@ -3,7 +3,12 @@ function actor(xStart, yStart) {
 	var left = document.getElementsByClassName('actorLeft');
 	var right = document.getElementsByClassName('actorRight');
 
+	var bulletIcon = document.getElementsByClassName('bulletIcon');
+	var vBulletIcon = document.getElementsByClassName('vBulletIcon');
+
 	var actor = {
+		type: 'actor',
+
 		x: xStart,
 	    y: yStart,
 	    speed: 10,
@@ -30,7 +35,16 @@ function actor(xStart, yStart) {
 		dodgeHeat: 25,
 		afterimages: [],
 
-		gun: gun(0, function(x,y,dir) { return vbullet(x,y,dir) }),
+		gun: gun(0, [
+			{
+				icon: vBulletIcon[0],
+				make: function(x,y,dir) { return vbullet(x,y,dir) }
+			},
+			{
+				icon: bulletIcon[0],
+				make: function(x,y,dir) { return bullet(x,y,dir) }
+			}
+		]),
 
 		render: function(ctx, target) {
 	        if(!this.dead && !this.dying) {
@@ -61,6 +75,7 @@ function actor(xStart, yStart) {
 	    		this.timers();
 	    		this.move();
 	            this.dodge();
+	            this.selectAmmo();
 	        }
 	        else if(this.dying && !this.dead) {
 	            if(this.deathAnimationCounter != 16)
@@ -69,21 +84,22 @@ function actor(xStart, yStart) {
 	                this.dead = true;
 	        }
 	        else {
-	        	if(buttonsPressed.includes(27)) {
-	            	screen = stage();
-	            	screen.width = canvas.width;
-				    screen.height = canvas.height;
-				    this.minHp = this.maxHp;
-				    this.dead = false;
-				    this.dying = false;
-				    this.score = 0;
-				    var x = this.x;
-				    var y = this.y;
-				    var dir = this.direction;
-				    this.gun = gun(0, function(x,y,dir) { return vbullet(x,y,dir) });
-				    screen.render(ctx);
-				}
-	        }
+                if(buttonsPressed.includes(27)) {
+                    screen = stage();
+                    screen.width = canvas.width;
+                    screen.height = canvas.height;
+                    this.minHp = this.maxHp;
+                    this.dead = false;
+                    this.dying = false;
+                    this.score = 0;
+                    var x = this.x;
+                    var y = this.y;
+                    var dir = this.direction;
+                    this.gun = gun(0, function(x,y,dir) { return vbullet(x,y,dir) });
+                    screen.render(ctx);
+                }
+            }
+
 	    },
 
 	    getWidth: function() {
@@ -131,7 +147,8 @@ function actor(xStart, yStart) {
             }
 
             if(buttonsPressed.includes(fireButton)) {
-            	this.gun.fireBullet(this.x + (this.image[this.frame].width / 2), this.y);
+            	if(this.gun.fireBullet(this.x + (this.image[this.frame].width / 2), this.y))
+            		this.shots++;
             }
 	    },
 
@@ -208,6 +225,16 @@ function actor(xStart, yStart) {
 			}
 	    },
 
+	    selectAmmo: function() {
+	    	var button = findButton(buttons, 88);
+	    	if(button) {
+	    		if(!button.isUsed) {
+	    			this.gun.changeAmmo();
+	    			button.isUsed = true;
+	    		}
+	    	}
+	    },
+
 	    collisionCheck: function(Object) {
 	    	if(!Object.dead && !Object.dying) {
 		    	var rect1 = {x: this.x, y: this.y, width: this.getWidth(), height: this.getHeight()};
@@ -221,10 +248,37 @@ function actor(xStart, yStart) {
 				   	return true;
 				}
 			}
+	    },
+
+	    reset: function() {
+	    	this.maxHp = 10;
+	    	this.minHp = this.maxHp;
+	    	this.speed = 10;
+		    this.dead = false;
+		    this.dying = false;
+		    this.score = 0;
+		    this.hits = 0;
+		    this.shots = 0;
+		    this.kills = 0;
+		    var x = this.x;
+		    var y = this.y;
+		    var dir = this.direction;
+		    this.gun = gun(0, [function(x,y,dir) { return vbullet(x,y,dir) }, function(x,y,dir) { return bullet(x,y,dir) }]);
+		    this.hit = false;
+
+		    this.deathAnimationCounter = 0;
+			this.animationTimer = 0;
+		    this.inventory = [];
+		    this.image = document.getElementsByClassName('actorIdle');;
+			this.frame = 0;
+
+			this.dodgeSpeed = 100;
+			this.dodgeHeat = 25;
+			this.afterimages = [];
 	    }
     }
 
     return actor;
 }
 
-actor = actor(65, window.innerHeight - 200);
+var actor = actor(65, window.innerHeight - 200);

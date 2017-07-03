@@ -1,5 +1,7 @@
 function vbullet(xStart, yStart, direction = 0) {
 	var bullet = {
+		type: 'bullet',
+
 		x: xStart,
 		y: yStart,
 		x2: xStart,
@@ -29,8 +31,8 @@ function vbullet(xStart, yStart, direction = 0) {
 		},
 
 		logic: function(targets) {
-			// Only check if hasn't hit target //
-			if(!this.done) {
+			
+			if(!this.done1) {
 				/// Check if target is hit //
 				var width = this.getWidth();
 				var height = this.getHeight();
@@ -47,12 +49,14 @@ function vbullet(xStart, yStart, direction = 0) {
 				for(var i = 0; i != targets.length; i++) {
 					if(targets[i].collisionCheck(bulletRight)) {
 						if(!targets[i].dead && !targets[i].dying) {
-							targets[i].hit(1);
+							targets[i].hit(this.getDamage(), this.type);
 		        			this.done1 = true;
 		        			break;
 	        			}
 					}
 				}
+			}
+			if(!this.done2) {
 				var width = this.getWidth();
 				var height = this.getHeight();
 				var x2 = this.x2;
@@ -68,13 +72,16 @@ function vbullet(xStart, yStart, direction = 0) {
 				for(var i = 0; i != targets.length; i++) {
 					if(targets[i].collisionCheck(bulletLeft)) {
 						if(!targets[i].dead && !targets[i].dying) {
-							targets[i].hit(1);
+							targets[i].hit(this.getDamage(), this.type);
 		        			this.done2 = true;
 		        			break;
 	        			}
 					}
 				}
+			}
 
+			// Only check if hasn't hit target //
+			if(!this.done) {
 				// Move bullet //
 				if(!this.down) // Moving up
 		        {
@@ -132,6 +139,10 @@ function vbullet(xStart, yStart, direction = 0) {
 	    getHeight: function() {
 	    	return this.imageLeft[this.frame].height;
 	    },
+
+	    getDamage: function() {
+	    	return 1;
+	    }
 	}
 
 	return bullet;

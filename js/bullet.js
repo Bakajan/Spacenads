@@ -1,10 +1,12 @@
 function bullet(xStart, yStart, direction = 0) {
 	var bullet = {
+		type: 'bullet',
+
 		x: xStart,
 		y: yStart,
 		speed: 10,
 		heat: 10,
-		
+
 		done: false,
 		targetHit: false,
 		down: direction, 
@@ -30,7 +32,7 @@ function bullet(xStart, yStart, direction = 0) {
 				for(var i = 0; i != targets.length; i++) {
 					if(targets[i].collisionCheck(this)) {
 						if(!targets[i].dead && !targets[i].dying) {
-							targets[i].hit(1);
+							 targets[i].hit(this.getDamage(), this.type);
 		        			this.done = true;
 	        			}
 					}
@@ -74,6 +76,10 @@ function bullet(xStart, yStart, direction = 0) {
 	    getHeight: function() {
 	    	return this.image[this.frame].height;
 	    },
+
+	    getDamage: function() {
+	    	return 1;
+	    }
 	}
 
 	return bullet;
