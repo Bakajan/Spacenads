@@ -65,7 +65,7 @@ function stage(screenWidth, screenHeight) {
                 var accuracy = (isNaN(acc1/acc2)) ? 0 : (acc1 / acc2) * 100;
                 var accResult = (isNaN(accuracy)) ? 0 : (accuracy / 100) * 1000;
                 
-                ctx.fillText("Results!", 550, 225);
+                ctx.fillText("Stage Cleared!", 550, 225);
                 ctx.fillText("Base Score ", 440, 275); ctx.fillText(": " + actor.score, 575, 275);
                 ctx.fillText("Enemy Kills", 440, 300); ctx.fillText(": " + actor.kills + " X 66 = " + actor.kills * 66, 575, 300);
                 ctx.fillText("Accuracy ", 440, 325); ctx.fillText(": " + parseInt(accuracy) + "% / 1000 = " + parseInt(accResult), 575, 325);
