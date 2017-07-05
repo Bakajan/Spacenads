@@ -92,10 +92,22 @@ function actor(xStart, yStart) {
                     this.dead = false;
                     this.dying = false;
                     this.score = 0;
+                    this.hits = 0;
+                    this.shots = 0;
+                    this.kills = 0;
                     var x = this.x;
                     var y = this.y;
                     var dir = this.direction;
-                    this.gun = gun(0, function(x,y,dir) { return vbullet(x,y,dir) });
+                    this.gun = gun(0, [
+						{
+							icon: vBulletIcon[0],
+							make: function(x,y,dir) { return vbullet(x,y,dir) }
+						},
+						{
+							icon: bulletIcon[0],
+							make: function(x,y,dir) { return bullet(x,y,dir) }
+						}
+					]);
                     screen.render(ctx);
                 }
             }
